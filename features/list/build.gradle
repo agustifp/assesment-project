@@ -32,6 +32,7 @@ android {
 dependencies {
     implementation project(':dagger.addons')
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.2.60'
+
     //glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glide"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
@@ -40,7 +41,7 @@ dependencies {
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
     implementation "com.google.dagger:dagger-android:$rootProject.dagger"
-    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
+    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     //architecture components
@@ -57,11 +58,12 @@ dependencies {
     implementation "com.google.code.gson:gson:$rootProject.gson"
 
     //test
-    testImplementation "org.assertj:assertj-core:3.11.1"
+    testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.mockito:mockito-core:2.21.0"
+    testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation "com.squareup.retrofit2:retrofit-mock:$rootProject.retrofit"
     testImplementation 'androidx.arch.core:core-testing:2.0.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation project(':features:detail')
 }
