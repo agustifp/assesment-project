@@ -2,16 +2,21 @@ package com.vp.list;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +30,7 @@ import com.vp.list.viewmodel.ListViewModel;
 
 import javax.inject.Inject;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dagger.android.support.AndroidSupportInjection;
 
 public class ListFragment extends Fragment implements GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
@@ -38,6 +44,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
+    private SwipeRefreshLayout swipeRefresh;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
@@ -59,10 +66,8 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        viewAnimator = view.findViewById(R.id.viewAnimator);
-        progressBar = view.findViewById(R.id.progressBar);
-        errorTextView = view.findViewById(R.id.errorText);
+
+        setViews(view);
 
         if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getString(CURRENT_QUERY);
@@ -75,8 +80,20 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
                 handleResult(listAdapter, searchResult);
             }
         });
+
         listViewModel.searchMoviesByTitle(currentQuery, 1);
         showProgressBar();
+    }
+
+    private void setViews(@NonNull View view) {
+        recyclerView = view.findViewById(R.id.recyclerView);
+        viewAnimator = view.findViewById(R.id.viewAnimator);
+        progressBar = view.findViewById(R.id.progressBar);
+        errorTextView = view.findViewById(R.id.errorText);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
+        swipeRefresh.setOnRefreshListener(() -> {
+            listViewModel.searchMoviesByTitle(currentQuery, 1);
+        });
     }
 
     private void initBottomNavigation(@NonNull View view) {
@@ -111,10 +128,12 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     }
 
     private void showList() {
+        swipeRefresh.setRefreshing(false);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
     }
 
     private void showError() {
+        swipeRefresh.setRefreshing(false);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
     }
 
@@ -169,7 +188,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
         //replaced the empty spaces to avoid api failure and bad movie ID generated.
         Uri uri = Uri.parse("").buildUpon()
-                .appendQueryParameter("imdbID", imdbID.replace(" ",""))
+                .appendQueryParameter("imdbID", imdbID.replace(" ", ""))
                 .build();
         detailIntent.setData(uri);
         startActivity(detailIntent);
