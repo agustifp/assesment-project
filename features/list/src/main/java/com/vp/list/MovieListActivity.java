@@ -1,6 +1,8 @@
 package com.vp.list;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +20,8 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class MovieListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private static final String IS_SEARCH_VIEW_ICONIFIED = "is_search_view_iconified";
+    private static final String CURRENT_QUERY = "current_query";
+    private String currentQuery = "";
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingActivityInjector;
@@ -37,6 +41,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
                     .commit();
         } else {
             searchViewExpanded = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ICONIFIED);
+            currentQuery = savedInstanceState.getString(CURRENT_QUERY);
         }
     }
 
@@ -52,6 +57,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                currentQuery = query;
                 ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.TAG);
                 listFragment.submitSearchQuery(query);
                 return true;
@@ -59,9 +65,14 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                currentQuery = newText;
                 return false;
             }
         });
+
+        if(!currentQuery.equals("")){
+            searchView.setQuery(currentQuery,false);
+        }
 
         return true;
     }
@@ -70,6 +81,7 @@ public class MovieListActivity extends AppCompatActivity implements HasSupportFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_SEARCH_VIEW_ICONIFIED, searchView.isIconified());
+        outState.putString(CURRENT_QUERY, currentQuery);
     }
 
     @Override
