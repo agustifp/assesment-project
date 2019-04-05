@@ -39,7 +39,7 @@ class MoviesDAO {
 
 
     private fun mapListItemToRealmEntity(listItem: ListItem) = ListItemRealmEntity().apply {
-        imdbID = listItem.imdbID.toInt()
+        imdbID = listItem.imdbID
         poster = listItem.poster
         title = listItem.title
         year = listItem.poster
@@ -54,7 +54,7 @@ class MoviesDAO {
     }
 
     private fun mapSingleRealmEntityToDomain(listItemRealmEntity: ListItemRealmEntity) = ListItem().apply {
-        imdbID = listItemRealmEntity.imdbID.toString()
+        imdbID = listItemRealmEntity.imdbID
         poster = listItemRealmEntity.poster
         title = listItemRealmEntity.title
         year = listItemRealmEntity.poster

@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey
 
 open class ListItemRealmEntity : RealmObject() {
     @PrimaryKey
-    var imdbID: Int? = null
+    var imdbID: String? = null
     var title: String? = null
     var year: String? = null
     var poster: String? = null
