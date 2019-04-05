@@ -67,14 +67,14 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         initBottomNavigation(view)
         initList()
 
-        observe(listViewModel!!.observeMovies()) {
+        observe(listViewModel.observeMovies()) {
             searchResult ->
             if (searchResult != null) {
                 handleResult(listAdapter!!, searchResult)
             }
         }
 
-        listViewModel!!.searchMoviesByTitle(currentQuery!!, 1)
+        listViewModel.searchMoviesByTitle(currentQuery!!, 1)
         showProgressBar()
     }
 
