@@ -3,15 +3,14 @@ package com.vp.list.viewmodel
 import com.vp.database.model.entity.ListItem
 
 
-import java.util.Collections
 import java.util.Objects
 
 class SearchResult constructor(val items: List<ListItem>, val totalResult: Int, val listState: ListState) {
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val that = o as SearchResult?
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val that = other as SearchResult?
         return totalResult == that!!.totalResult &&
                 items == that.items &&
                 listState == that.listState
