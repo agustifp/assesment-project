@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.vp.database.model.entity.ListItem;
 import com.vp.list.GlideApp;
@@ -34,12 +35,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ListVi
         ListItem listItem = listItems.get(position);
 
         if (listItem.getPoster() != null && !NO_IMAGE.equals(listItem.getPoster())) {
-            final float density = holder.image.getResources().getDisplayMetrics().density;
             GlideApp
                     .with(holder.image)
                     .load(listItem.getPoster())
-                    .override((int) (300 * density), (int) (600 * density))
+                    .centerCrop()
                     .into(holder.image);
+            holder.textViewTitle.setText(listItem.getTitle());
         } else {
             holder.image.setImageResource(R.drawable.placeholder);
         }
@@ -69,11 +70,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ListVi
 
     class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView image;
-
+        TextView textViewTitle;
         ListViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             image = itemView.findViewById(R.id.poster);
+            textViewTitle = itemView.findViewById(R.id.title);
         }
 
         @Override

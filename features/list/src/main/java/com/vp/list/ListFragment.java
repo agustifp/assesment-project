@@ -184,13 +184,14 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
     @Override
     public void onItemClick(String imdbID) {
-
-        Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-        //replaced the empty spaces to avoid api failure and bad movie ID generated.
-        Uri uri = Uri.parse("").buildUpon()
-                .appendQueryParameter("imdbID", imdbID.replace(" ", ""))
-                .build();
-        detailIntent.setData(uri);
-        startActivity(detailIntent);
+        if (imdbID != null) {
+            Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+            //replaced the empty spaces to avoid api failure and bad movie ID generated.
+            Uri uri = Uri.parse("").buildUpon()
+                    .appendQueryParameter("imdbID", imdbID.replace(" ", ""))
+                    .build();
+            detailIntent.setData(uri);
+            startActivity(detailIntent);
+        }
     }
 }

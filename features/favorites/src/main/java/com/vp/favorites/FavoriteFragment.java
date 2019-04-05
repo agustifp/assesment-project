@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
@@ -22,13 +23,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dagger.android.support.AndroidSupportInjection;
 
 public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnItemClickListener {
-    public static final String TAG = "FavoriteFragment";
+    static final String TAG = "FavoriteFragment";
 
     @Inject
     ViewModelProvider.Factory factory;
@@ -36,11 +36,9 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnItem
     private FavoriteViewModel listViewModel;
     private FavoriteAdapter listAdapter;
     private ViewAnimator viewAnimator;
-    private SwipeRefreshLayout swipeRefresh;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
-    private String currentQuery = "Interview";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +75,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnItem
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
         errorTextView = view.findViewById(R.id.errorText);
-        swipeRefresh = view.findViewById(R.id.swipeRefresh);
-        swipeRefresh.setOnRefreshListener(() -> {
-            listViewModel.loadFavorites();
-        });
+
     }
 
 
@@ -88,9 +83,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnItem
         listAdapter = new FavoriteAdapter();
         listAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(listAdapter);
-        recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),
-                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 3);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
     }
 
@@ -99,12 +92,10 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnItem
     }
 
     private void showList() {
-        swipeRefresh.setRefreshing(false);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
     }
 
     private void showError() {
-        swipeRefresh.setRefreshing(false);
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(errorTextView));
     }
 
@@ -129,14 +120,6 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnItem
         listAdapter.setItems(searchResult.getItems());
 
 
-    }
-
-
-    public void submitSearchQuery(@NonNull final String query) {
-        currentQuery = query;
-        listAdapter.clearItems();
-        listViewModel.loadFavorites();
-        showProgressBar();
     }
 
     @Override
