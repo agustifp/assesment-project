@@ -1,4 +1,4 @@
-package com.vp.list.model;
+package com.vp.database.model.entity;
 
 import com.google.gson.annotations.SerializedName;
 

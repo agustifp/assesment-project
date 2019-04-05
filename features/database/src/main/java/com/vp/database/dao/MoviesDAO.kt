@@ -1,10 +1,9 @@
-package com.vp.movies.database.dao
+package com.vp.database.dao
 
-import com.vp.list.model.ListItem
-import com.vp.movies.database.model.realmentity.ListItemRealmEntity
-import com.vp.movies.database.db.RealmManager
-import com.vp.movies.database.extensions.getAllEntities
-import com.vp.movies.database.extensions.saveEntity
+import com.vp.database.model.realmentity.ListItemRealmEntity
+import com.vp.database.db.RealmManager
+import com.vp.database.extensions.*
+import com.vp.database.model.entity.ListItem
 
 
 class MoviesDAO {
@@ -13,6 +12,16 @@ class MoviesDAO {
         RealmManager.executeTransaction { realm ->
             realm.saveEntity(mapListItemToRealmEntity(listItem))
         }
+    }
+
+    fun removeFavorite(id: String?) {
+        RealmManager.executeTransaction { realm ->
+            realm.deleteEntity(ListItemRealmEntity::class.java, id?.toInt() ?: 0)
+        }
+    }
+
+    fun isFavorite(id: String?) = RealmManager.executeTransaction { realm ->
+        realm.entityExists(ListItemRealmEntity::class.java, "imdbID", id?.toInt() ?: 0)
     }
 
     fun getFavoritesMovies() =

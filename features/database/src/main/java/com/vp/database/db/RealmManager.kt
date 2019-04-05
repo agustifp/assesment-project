@@ -1,4 +1,4 @@
-package com.vp.movies.database.db
+package com.vp.database.db
 
 import android.content.Context
 import io.realm.Realm

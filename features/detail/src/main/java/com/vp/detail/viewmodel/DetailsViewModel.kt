@@ -3,6 +3,8 @@ package com.vp.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vp.database.dao.MoviesDAO
+import com.vp.database.model.entity.ListItem
 import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -16,6 +18,7 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
+    private val moviesDAO = MoviesDAO()
 
     fun title(): LiveData<String> = title
 
@@ -40,6 +43,15 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
                 details.postValue(null)
                 loadingState.value = LoadingState.ERROR
             }
+        })
+    }
+
+    fun saveToFavorite(movieId: String) {
+        moviesDAO.saveFavorite(ListItem().apply {
+            imdbID = movieId
+            poster = details.value?.poster
+            title = details.value?.title
+            year = details.value?.year
         })
     }
 

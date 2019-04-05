@@ -1,4 +1,4 @@
-package com.vp.movies.database.model.realmentity
+package com.vp.database.model.realmentity
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey

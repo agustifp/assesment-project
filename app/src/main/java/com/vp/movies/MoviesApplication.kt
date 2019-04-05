@@ -2,7 +2,7 @@ package com.vp.movies
 
 import android.app.Activity
 import android.app.Application
-import com.vp.movies.database.db.RealmManager
+import com.vp.database.db.RealmManager
 import com.vp.movies.di.DaggerAppComponent
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -18,7 +18,7 @@ class MoviesApplication : Application(), HasActivityInjector {
                 .application(this)
                 .build()
                 .inject(this)
-        RealmManager.initRealmContext(applicationContext)
+      RealmManager.initRealmContext(applicationContext)
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity>? = dispatchingActivityInjector

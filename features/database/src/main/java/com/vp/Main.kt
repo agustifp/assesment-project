@@ -1,4 +1,4 @@
-package com.vp.detail
+package com.vp
 
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.Menu
+import com.vp.detail.QueryProvider
+import com.vp.detail.R
 import com.vp.detail.databinding.ActivityDetailBinding
 import com.vp.detail.viewmodel.DetailsViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlin.run
 
-class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
+class Main : DaggerAppCompatActivity(), QueryProvider {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory

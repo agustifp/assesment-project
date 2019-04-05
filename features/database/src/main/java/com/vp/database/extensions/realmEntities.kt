@@ -1,4 +1,4 @@
-package com.vp.movies.database.extensions
+package com.vp.database.extensions
 
 import io.realm.Realm
 import io.realm.RealmObject
