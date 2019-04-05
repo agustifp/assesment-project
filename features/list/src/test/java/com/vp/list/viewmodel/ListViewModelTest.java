@@ -52,7 +52,7 @@ public class ListViewModelTest {
         listViewModel.searchMoviesByTitle("title", 1);
 
         //then
-        verify(mockObserver).onChanged(SearchResult.inProgress());
+        verify(mockObserver).onChanged(SearchResult.Companion.inProgress());
     }
 
     @Test
