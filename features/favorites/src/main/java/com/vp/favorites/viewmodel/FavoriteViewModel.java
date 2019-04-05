@@ -5,6 +5,8 @@ import com.vp.database.model.entity.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -15,7 +17,10 @@ public class FavoriteViewModel extends ViewModel {
     private String currentTitle = "";
     private List<ListItem> aggregatedItems = new ArrayList<>();
 
+    @Inject
+    FavoriteViewModel() {
 
+    }
 
     public LiveData<DataBaseResult> observeMovies() {
         return liveData;

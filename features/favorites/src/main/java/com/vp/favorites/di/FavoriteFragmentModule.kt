@@ -8,5 +8,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class FavoriteFragmentModule {
 
     @ContributesAndroidInjector
-    abstract fun bindListFragment(): FavoriteFragment
+    abstract fun bindFavoriteFragment(): FavoriteFragment
 }

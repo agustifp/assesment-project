@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.vp.database.model.entity.ListItem;
+import com.vp.list.GlideApp;
 
 import java.util.Collections;
 import java.util.List;

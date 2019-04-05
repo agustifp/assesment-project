@@ -58,4 +58,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation project(':features:database')
     implementation project(path: ':features:detail')
+    implementation project(path: ':features:list')
 }
