@@ -26,4 +26,20 @@ public class ListItem {
     public String getPoster() {
         return poster;
     }
+
+    public void setImdbID(String imdbID) {
+        this.imdbID = imdbID;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setYear(java.lang.String year) {
+        this.year = year;
+    }
 }
