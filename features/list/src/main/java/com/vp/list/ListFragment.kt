@@ -67,14 +67,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         initBottomNavigation(view)
         initList()
 
-        observe(listViewModel.observeMovies()) {
-            searchResult ->
+        observe(listViewModel.observeMovies()) { searchResult ->
             if (searchResult != null) {
                 handleResult(listAdapter!!, searchResult)
             }
         }
 
-        listViewModel.searchMoviesByTitle(currentQuery!!, 1)
+        listViewModel.searchMoviesByTitle(currentQuery!!, 1, true)
         showProgressBar()
     }
 
@@ -84,7 +83,9 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         progressBar = view.findViewById(R.id.progressBar)
         errorTextView = view.findViewById(R.id.errorText)
         swipeRefresh = view.findViewById(R.id.swipeRefresh)
-        swipeRefresh!!.setOnRefreshListener { listViewModel!!.searchMoviesByTitle(currentQuery!!, 1) }
+        swipeRefresh!!.setOnRefreshListener {
+            submitSearchQuery(currentQuery!!)
+        }
     }
 
     private fun initBottomNavigation(view: View) {
@@ -159,13 +160,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener!!.markLoading(true)
-        listViewModel!!.searchMoviesByTitle(currentQuery!!, page)
+        listViewModel.searchMoviesByTitle(currentQuery!!, page, false)
     }
 
     fun submitSearchQuery(query: String) {
         currentQuery = query
         listAdapter!!.clearItems()
-        listViewModel!!.searchMoviesByTitle(query, 1)
+        listViewModel.searchMoviesByTitle(query, 1, true)
         showProgressBar()
     }
 

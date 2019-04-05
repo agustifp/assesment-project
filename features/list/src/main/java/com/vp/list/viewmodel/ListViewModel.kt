@@ -26,23 +26,21 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
         return liveData
     }
 
-    fun searchMoviesByTitle(title: String, page: Int) {
+    fun searchMoviesByTitle(title: String, page: Int, hasToReload: Boolean) {
 
-        if (page == 1 && title != currentTitle) {
+        if (page == 1 && title != currentTitle || hasToReload) {
             aggregatedItems.clear()
             currentTitle = title
             liveData.value = SearchResult.inProgress()
         }
+
         searchService.search(title, page).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
 
                 val result = response.body()
 
-                if (result != null) {
-                    result.search.forEach {
-                        aggregatedItems.add(it)
-                    }
-
+                if (result != null && result.hasResponse()) {
+                    aggregatedItems.addAll(result.search)
                     liveData.value = SearchResult.success(aggregatedItems, aggregatedItems.size)
                 }
             }
