@@ -1,8 +1,8 @@
 package com.vp.favorites.viewmodel;
 
+import com.vp.database.dao.MoviesDAO;
 import com.vp.database.model.entity.ListItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,8 +14,7 @@ import androidx.lifecycle.ViewModel;
 public class FavoriteViewModel extends ViewModel {
     private MutableLiveData<DataBaseResult> liveData = new MutableLiveData<>();
 
-    private String currentTitle = "";
-    private List<ListItem> aggregatedItems = new ArrayList<>();
+    private MoviesDAO moviesDAO = new MoviesDAO();
 
     @Inject
     FavoriteViewModel() {
@@ -28,27 +27,13 @@ public class FavoriteViewModel extends ViewModel {
 
     public void loadFavorites() {
 
-//        if (page == 1 && !title.equals(currentTitle)) {
-//            aggregatedItems.clear();
-//            currentTitle = title;
-//            liveData.setValue(DataBaseResult.inProgress());
-//        }
-//        searchService.search(title, page).enqueue(new Callback<SearchResponse>() {
-//            @Override
-//            public void onResponse(@NonNull Call<SearchResponse> call, @NonNull Response<SearchResponse> response) {
-//
-//                SearchResponse result = response.body();
-//
-//                if (result != null) {
-//                    aggregatedItems.addAll(result.getSearch());
-//                    liveData.setValue(SearchResult.success(aggregatedItems, aggregatedItems.size()));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<SearchResponse> call, @NonNull Throwable t) {
-//                liveData.setValue(SearchResult.error());
-//            }
-//        });
+        liveData.setValue(DataBaseResult.inProgress());
+
+        List<ListItem> results = moviesDAO.getFavoritesMovies();
+        if (results != null && results.size() > 0) {
+            liveData.setValue(DataBaseResult.success(results, results.size()));
+        } else {
+            liveData.setValue(DataBaseResult.error());
+        }
     }
 }
