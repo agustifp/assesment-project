@@ -1,5 +1,7 @@
 package com.vp.list.model;
 
+import com.vp.database.model.entity.ListItem;
+
 import androidx.annotation.NonNull;
 
 import java.util.Collections;
