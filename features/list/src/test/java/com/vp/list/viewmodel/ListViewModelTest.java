@@ -33,7 +33,7 @@ public class ListViewModelTest {
         ListViewModel listViewModel = new ListViewModel(searchService);
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1,true);
 
         //then
         assertThat(listViewModel.observeMovies().getValue().getListState()).isEqualTo(ListState.ERROR);
@@ -49,7 +49,7 @@ public class ListViewModelTest {
         listViewModel.observeMovies().observeForever(mockObserver);
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1,true);
 
         //then
         verify(mockObserver).onChanged(SearchResult.Companion.inProgress());
@@ -65,7 +65,7 @@ public class ListViewModelTest {
         listViewModel.observeMovies().observeForever(mockObserver);
 
         //when
-        listViewModel.searchMoviesByTitle("title", 1);
+        listViewModel.searchMoviesByTitle("title", 1,true);
 
         //then
         assertThat(Objects.requireNonNull(listViewModel.observeMovies().getValue()).getListState()).isEqualTo(ListState.LOADED);

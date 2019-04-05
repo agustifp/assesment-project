@@ -2,7 +2,6 @@ package com.vp.favorites.viewmodel
 
 import com.vp.database.model.entity.ListItem
 
-import java.util.Collections
 import java.util.Objects
 
 class DataBaseResult constructor(val items: List<ListItem>, private val totalResult: Int, val listState: FavoriteState) {

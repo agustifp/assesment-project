@@ -9,7 +9,7 @@ fun <T : RealmObject> Realm.saveEntities(entityList: List<T>) {
     }
 }
 
-fun <T : RealmObject> Realm.saveEntity(entity: T) =
+fun <T : RealmObject> Realm.saveEntity(entity: T): T =
         copyToRealmOrUpdate(entity)
 
 fun <T : RealmObject> Realm.getEntity(entityType: Class<T>, idField: String, id: Int): T? =
