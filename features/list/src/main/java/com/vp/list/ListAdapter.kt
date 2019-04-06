@@ -34,6 +34,7 @@ class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun clearItems() {
         listItems.clear()
+        notifyDataSetChanged()
     }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {

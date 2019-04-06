@@ -11,12 +11,12 @@ class GridPagingScrollListener constructor(private val layoutManager: LinearLayo
     var isLastPage = false
     var isLoading = false
 
-    private val isNotFirstPage: Boolean
-        get() = layoutManager.findFirstVisibleItemPosition() >= 0 && layoutManager.itemCount >= PAGE_SIZE
-
-    fun resetPage() {
+    fun resetState() {
+        isLastPage = false
         currentPage = 1
     }
+
+    fun isFirstLoad() = currentPage == 1
 
     private var currentPage = 1
 
@@ -30,7 +30,7 @@ class GridPagingScrollListener constructor(private val layoutManager: LinearLayo
     }
 
     private fun shouldLoadNextPage(): Boolean {
-        return !isLoading && userScrollsToNextPage() && isNotFirstPage && hasNextPage()
+        return !isLoading && userScrollsToNextPage() && hasNextPage()
     }
 
     private fun userScrollsToNextPage(): Boolean {

@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
+import com.google.android.material.snackbar.Snackbar
 
 import com.vp.detail.DetailActivity
 import com.vp.list.model.SearchResult
@@ -27,7 +29,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
 
 
-
 class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
 
 
@@ -38,6 +39,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private lateinit var gridPagingScrollListener: GridPagingScrollListener
     private lateinit var listAdapter: ListAdapter
     private var currentQuery = "Interview"
+    private lateinit var snackBar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +54,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setClickListeners()
         if (savedInstanceState != null) {
             val retrieved = savedInstanceState.getString(CURRENT_QUERY)
             retrieved.let { currentQuery = it ?: currentQuery }
         }
 
+        setListeners()
+        createSnackBar()
         initBottomNavigation(view)
         initList()
 
@@ -71,10 +74,8 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         showProgressBar()
     }
 
-    private fun setClickListeners() {
-
+    private fun setListeners() {
         swipeRefresh.setOnRefreshListener {
-            gridPagingScrollListener.resetPage()
             submitSearchQuery(currentQuery)
         }
     }
@@ -108,15 +109,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
     private fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
-        errorText.visibility = View.GONE
     }
 
-    private fun showProgressBarMoreContent(){
+    private fun showProgressBarMoreContent() {
         progressBarMoreContent.visibility = View.VISIBLE
     }
 
     private fun showList() {
-        errorText.visibility = View.GONE
         progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
         recyclerView.visibility = View.VISIBLE
@@ -129,19 +128,35 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private fun showError() {
         progressBar.visibility = View.GONE
         progressBarMoreContent.visibility = View.GONE
+        swipeRefresh.isRefreshing = false
+        if (!snackBar.isShown) {
+            snackBar.show()
+        }
+    }
+
+    private fun showEmptyState() {
         recyclerView.visibility = View.GONE
-        errorText.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+        progressBarMoreContent.visibility = View.GONE
         swipeRefresh.isRefreshing = false
     }
 
     private fun handleResult(listAdapter: ListAdapter, searchResult: SearchResult) {
         when (searchResult.listState) {
             ListState.LOADED -> {
-                setItemsData(listAdapter, searchResult)
-                showList()
+                if (searchResult.totalResult > 0) {
+                    setItemsData(listAdapter, searchResult)
+                    showList()
+                } else {
+                    showEmptyState()
+                }
             }
             ListState.IN_PROGRESS -> {
-                showProgressBar()
+                if (gridPagingScrollListener.isFirstLoad()) {
+                    showProgressBar()
+                } else {
+                    showProgressBarMoreContent()
+                }
             }
             else -> {
                 showError()
@@ -149,6 +164,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         }
         gridPagingScrollListener.isLoading = false
     }
+
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
         listAdapter.setItems(searchResult.items)
@@ -166,11 +182,10 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener.isLoading = true
         listViewModel.searchMoviesByTitle(currentQuery, page, false)
-        showProgressBarMoreContent()
     }
 
     fun submitSearchQuery(query: String) {
-        gridPagingScrollListener.resetPage()
+        gridPagingScrollListener.resetState()
         currentQuery = query
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(query, 1, true)
@@ -190,5 +205,10 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     companion object {
         val TAG = "ListFragment"
         private val CURRENT_QUERY = "current_query"
+    }
+
+    private fun createSnackBar() {
+        snackBar = Snackbar.make(coordinatorSnackBar, resources.getString(R.string.data_loading_error), Snackbar.LENGTH_SHORT)
+        activity?.let { ContextCompat.getColor(it, R.color.colorAccent) }?.let { snackBar.view.setBackgroundColor(it) }
     }
 }
