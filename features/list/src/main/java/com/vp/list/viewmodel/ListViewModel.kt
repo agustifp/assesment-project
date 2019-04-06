@@ -41,7 +41,9 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
                 if (result != null && result.hasResponse()) {
                     aggregatedItems.addAll(result.search)
                     liveData.value = SearchResult.success(aggregatedItems, result.totalResults)
-                }else {
+                }else if(hasToReload){
+                    liveData.value = SearchResult.success(aggregatedItems, 0)
+                }else{
                     liveData.value = SearchResult.error()
                 }
             }
