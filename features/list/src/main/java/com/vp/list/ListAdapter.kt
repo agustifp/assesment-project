@@ -9,7 +9,7 @@ import android.widget.ImageView
 import com.vp.database.model.entity.ListItem
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
-    private var listItems: MutableList<ListItem> = mutableListOf()
+    private var listItems = arrayListOf<ListItem>()
     private lateinit var EMPTY_ON_ITEM_CLICK_LISTENER: OnItemClickListener
     private lateinit var onItemClickListener: OnItemClickListener
 
@@ -37,7 +37,7 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
     }
 
     fun setItems(listItems: List<ListItem>) {
-        this.listItems.addAll(listItems)
+        this.listItems = listItems as ArrayList<ListItem>
         notifyDataSetChanged()
     }
 

@@ -53,6 +53,7 @@ class MovieListActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 currentQuery = query
                 val listFragment = supportFragmentManager.findFragmentByTag(ListFragment.TAG) as ListFragment?
                 listFragment!!.submitSearchQuery(query)
+                searchView!!.clearFocus()//fixing called twice
                 return true
             }
 
