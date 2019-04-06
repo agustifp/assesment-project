@@ -3,12 +3,11 @@ package com.vp.list.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.vp.database.model.entity.ListItem
-import com.vp.list.model.SearchResponse
-import com.vp.list.service.SearchService
 
-import java.util.ArrayList
+import com.vp.list.model.SearchResponse
+import com.vp.list.model.SearchResult
+import com.vp.list.service.SearchService
 
 import javax.inject.Inject
 
@@ -27,11 +26,11 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
     }
 
     fun searchMoviesByTitle(title: String, page: Int, hasToReload: Boolean) {
+        liveData.value = SearchResult.inProgress()
 
         if (page == 1 && title != currentTitle || hasToReload) {
             aggregatedItems.clear()
             currentTitle = title
-            liveData.value = SearchResult.inProgress()
         }
 
         searchService.search(title, page).enqueue(object : Callback<SearchResponse> {
@@ -42,6 +41,8 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
                 if (result != null && result.hasResponse()) {
                     aggregatedItems.addAll(result.search)
                     liveData.value = SearchResult.success(aggregatedItems, result.totalResults)
+                }else{
+                    liveData.value = SearchResult.error()
                 }
             }
 

@@ -1,35 +1,36 @@
 package com.vp.list
 
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class GridPagingScrollListener constructor(private val layoutManager: GridLayoutManager) : RecyclerView.OnScrollListener() {
+class GridPagingScrollListener constructor(private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
     private lateinit var EMPTY_LISTENER: LoadMoreItemsListener
     private lateinit var loadMoreItemsListener: LoadMoreItemsListener
 
-    private var isLastPage = false
-    private var isLoading = false
+    var isLastPage = false
+    var isLoading = false
 
     private val isNotFirstPage: Boolean
         get() = layoutManager.findFirstVisibleItemPosition() >= 0 && layoutManager.itemCount >= PAGE_SIZE
 
-    private val isNotLoadingInProgress: Boolean
-        get() = !isLoading
+    fun resetPage() {
+        currentPage = 1
+    }
 
-    private val nextPageNumber: Int
-        get() = layoutManager.itemCount / PAGE_SIZE + 1
+    private var currentPage = 1
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
         if (shouldLoadNextPage()) {
-            loadMoreItemsListener.loadMoreItems(nextPageNumber)
+            currentPage++
+            loadMoreItemsListener.loadMoreItems(currentPage)
         }
     }
 
     private fun shouldLoadNextPage(): Boolean {
-        return isNotLoadingInProgress && userScrollsToNextPage() && isNotFirstPage && hasNextPage()
+        return !isLoading && userScrollsToNextPage() && isNotFirstPage && hasNextPage()
     }
 
     private fun userScrollsToNextPage(): Boolean {
@@ -46,14 +47,6 @@ class GridPagingScrollListener constructor(private val layoutManager: GridLayout
         } else {
             this.loadMoreItemsListener = EMPTY_LISTENER
         }
-    }
-
-    fun markLoading(isLoading: Boolean) {
-        this.isLoading = isLoading
-    }
-
-    fun markLastPage(isLastPage: Boolean) {
-        this.isLastPage = isLastPage
     }
 
     interface LoadMoreItemsListener {

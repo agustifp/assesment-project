@@ -1,46 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="4dp">
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/poster"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/darker_gray" />
-
-        <LinearLayout
-            android:id="@+id/infoContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:background="@drawable/shape_foreground_profile"
-            android:gravity="right"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <TextView
-                android:gravity="bottom"
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                tools:text="The interView" />
-
-        </LinearLayout>
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+    <ImageView
+        android:id="@+id/poster"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
+</FrameLayout>

@@ -24,14 +24,11 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val listItem = listItems[position]
-
-        if (listItem.poster != null && NO_IMAGE != listItem.poster) {
+        if (listItem.poster.isNotEmpty() && NO_IMAGE != listItem.poster) {
             GlideApp
                     .with(holder.image)
                     .load(listItem.poster)
-                    .centerCrop()
                     .into(holder.image)
-            holder.textViewTitle.text = listItem.title
         } else {
             holder.image.setImageResource(R.drawable.placeholder)
         }
@@ -60,12 +57,10 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var image: ImageView
-        var textViewTitle: TextView
 
         init {
             itemView.setOnClickListener(this)
             image = itemView.findViewById(R.id.poster)
-            textViewTitle = itemView.findViewById(R.id.title)
         }
 
         override fun onClick(v: View) {

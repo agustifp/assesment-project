@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -13,11 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ViewAnimator
 import androidx.lifecycle.*
 
 import com.vp.detail.DetailActivity
-import com.vp.list.viewmodel.SearchResult
+import com.vp.list.model.SearchResult
 import com.vp.list.viewmodel.ListViewModel
 
 import javax.inject.Inject
@@ -25,6 +25,8 @@ import javax.inject.Inject
 import com.vp.list.viewmodel.ListState
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
+
+
 
 class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
 
@@ -53,7 +55,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
         setClickListeners()
         if (savedInstanceState != null) {
             val retrieved = savedInstanceState.getString(CURRENT_QUERY)
-            retrieved.let { currentQuery = it?:currentQuery }
+            retrieved.let { currentQuery = it ?: currentQuery }
         }
 
         initBottomNavigation(view)
@@ -72,6 +74,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     private fun setClickListeners() {
 
         swipeRefresh.setOnRefreshListener {
+            gridPagingScrollListener.resetPage()
             submitSearchQuery(currentQuery)
         }
     }
@@ -104,17 +107,31 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     }
 
     private fun showProgressBar() {
-        viewAnimator.displayedChild = viewAnimator.indexOfChild(progressBar)
+        progressBar.visibility = View.VISIBLE
+        errorText.visibility = View.GONE
+    }
+
+    private fun showProgressBarMoreContent(){
+        progressBarMoreContent.visibility = View.VISIBLE
     }
 
     private fun showList() {
+        errorText.visibility = View.GONE
+        progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
-        viewAnimator.displayedChild = viewAnimator.indexOfChild(recyclerView)
+        recyclerView.visibility = View.VISIBLE
+
+        Handler().postDelayed({
+            progressBarMoreContent.visibility = View.GONE
+        }, 500)
     }
 
     private fun showError() {
+        progressBar.visibility = View.GONE
+        progressBarMoreContent.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        errorText.visibility = View.VISIBLE
         swipeRefresh.isRefreshing = false
-        viewAnimator.displayedChild = viewAnimator.indexOfChild(errorText)
     }
 
     private fun handleResult(listAdapter: ListAdapter, searchResult: SearchResult) {
@@ -130,14 +147,14 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                 showError()
             }
         }
-        gridPagingScrollListener.markLoading(false)
+        gridPagingScrollListener.isLoading = false
     }
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
         listAdapter.setItems(searchResult.items)
 
         if (searchResult.totalResult <= listAdapter.itemCount) {
-            gridPagingScrollListener.markLastPage(true)
+            gridPagingScrollListener.isLastPage = true
         }
     }
 
@@ -147,11 +164,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     }
 
     override fun loadMoreItems(page: Int) {
-        gridPagingScrollListener.markLoading(true)
+        gridPagingScrollListener.isLoading = true
         listViewModel.searchMoviesByTitle(currentQuery, page, false)
+        showProgressBarMoreContent()
     }
 
     fun submitSearchQuery(query: String) {
+        gridPagingScrollListener.resetPage()
         currentQuery = query
         listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(query, 1, true)

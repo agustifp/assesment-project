@@ -1,6 +1,7 @@
 package com.vp.favorites
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import javax.inject.Inject
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vp.favorites.viewmodel.FavoriteState
 import com.vp.list.observe
@@ -65,7 +67,8 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
         listAdapter = FavoriteAdapter()
         listAdapter!!.setOnItemClickListener(this)
         recyclerView!!.adapter = listAdapter
-        val layoutManager = LinearLayoutManager(context)
+        val layoutManager = GridLayoutManager(context,
+                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
         recyclerView!!.layoutManager = layoutManager
     }
 

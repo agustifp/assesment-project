@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="placeholder_gray_background">#aaaaaa</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#D57E3C</color>
+    <color name="colorPrimaryDark">#A05D2E</color>
+    <color name="colorAccent">#CE3D2C</color>
 </resources>

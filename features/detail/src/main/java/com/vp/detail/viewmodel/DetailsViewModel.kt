@@ -49,9 +49,9 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     fun saveToFavorite(movieId: String) {
         moviesDAO.saveFavorite(ListItem().apply {
             imdbID = movieId
-            poster = details.value?.poster
-            title = details.value?.title
-            year = details.value?.year
+            poster = details.value?.poster?:""
+            title = details.value?.title?:""
+            year = details.value?.year?:""
         })
     }
 
