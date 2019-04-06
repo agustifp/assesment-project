@@ -209,6 +209,5 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
     private fun createSnackBar() {
         snackBar = Snackbar.make(coordinatorSnackBar, resources.getString(R.string.data_loading_error), Snackbar.LENGTH_SHORT)
-        activity?.let { ContextCompat.getColor(it, R.color.colorAccent) }?.let { snackBar.view.setBackgroundColor(it) }
     }
 }
