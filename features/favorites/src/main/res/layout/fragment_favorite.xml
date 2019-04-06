@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/data_loading_error" />
+            android:text="@string/data_empty_error" />
     </ViewAnimator>
 
 </FrameLayout>

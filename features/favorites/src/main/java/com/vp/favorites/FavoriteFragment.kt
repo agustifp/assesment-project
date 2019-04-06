@@ -19,10 +19,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.vp.favorites.viewmodel.FavoriteState
 import com.vp.list.observe
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_favorite.*
 
 class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
 
@@ -31,10 +31,7 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
 
     private lateinit var favoriteViewModel: FavoriteViewModel
     private var listAdapter: FavoriteAdapter? = null
-    private var viewAnimator: ViewAnimator? = null
-    private var recyclerView: RecyclerView? = null
-    private var progressBar: ProgressBar? = null
-    private var errorTextView: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +46,6 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setViews(view)
-
         initList()
 
         observe(favoriteViewModel.observeMovies()) {
@@ -64,13 +59,6 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
         showProgressBar()
     }
 
-    private fun setViews(view: View) {
-        recyclerView = view.findViewById(R.id.recyclerView)
-        viewAnimator = view.findViewById(R.id.viewAnimator)
-        progressBar = view.findViewById(R.id.progressBar)
-        errorTextView = view.findViewById(R.id.errorText)
-
-    }
 
 
     private fun initList() {
@@ -90,7 +78,7 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
     }
 
     private fun showError() {
-        viewAnimator!!.displayedChild = viewAnimator!!.indexOfChild(errorTextView)
+        viewAnimator!!.displayedChild = viewAnimator!!.indexOfChild(errorText)
     }
 
     private fun handleResult(listAdapter: FavoriteAdapter, searchResult: DataBaseResult) {

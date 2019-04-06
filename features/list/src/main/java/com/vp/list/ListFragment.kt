@@ -9,13 +9,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.ViewAnimator
 import androidx.lifecycle.*
 
@@ -25,9 +22,9 @@ import com.vp.list.viewmodel.ListViewModel
 
 import javax.inject.Inject
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.vp.list.viewmodel.ListState
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener, ListAdapter.OnItemClickListener {
 
@@ -36,14 +33,9 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     lateinit var factory: ViewModelProvider.Factory
 
     private lateinit var listViewModel: ListViewModel
-    private var gridPagingScrollListener: GridPagingScrollListener? = null
-    private var listAdapter: ListAdapter? = null
-    private var viewAnimator: ViewAnimator? = null
-    private var swipeRefresh: SwipeRefreshLayout? = null
-    private var recyclerView: RecyclerView? = null
-    private var progressBar: ProgressBar? = null
-    private var errorTextView: TextView? = null
-    private var currentQuery: String? = "Interview"
+    private lateinit var gridPagingScrollListener: GridPagingScrollListener
+    private lateinit var listAdapter: ListAdapter
+    private var currentQuery = "Interview"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +50,10 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setViews(view)
-
+        setClickListeners()
         if (savedInstanceState != null) {
-            currentQuery = savedInstanceState.getString(CURRENT_QUERY)
+            val retrieved = savedInstanceState.getString(CURRENT_QUERY)
+            retrieved.let { currentQuery = it?:currentQuery }
         }
 
         initBottomNavigation(view)
@@ -69,22 +61,18 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
         observe(listViewModel.observeMovies()) { searchResult ->
             if (searchResult != null) {
-                handleResult(listAdapter!!, searchResult)
+                handleResult(listAdapter, searchResult)
             }
         }
 
-        listViewModel.searchMoviesByTitle(currentQuery!!, 1, true)
+        listViewModel.searchMoviesByTitle(currentQuery, 1, true)
         showProgressBar()
     }
 
-    private fun setViews(view: View) {
-        recyclerView = view.findViewById(R.id.recyclerView)
-        viewAnimator = view.findViewById(R.id.viewAnimator)
-        progressBar = view.findViewById(R.id.progressBar)
-        errorTextView = view.findViewById(R.id.errorText)
-        swipeRefresh = view.findViewById(R.id.swipeRefresh)
-        swipeRefresh!!.setOnRefreshListener {
-            submitSearchQuery(currentQuery!!)
+    private fun setClickListeners() {
+
+        swipeRefresh.setOnRefreshListener {
+            submitSearchQuery(currentQuery)
         }
     }
 
@@ -102,31 +90,31 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
 
     private fun initList() {
         listAdapter = ListAdapter()
-        listAdapter!!.setOnItemClickListener(this)
-        recyclerView!!.adapter = listAdapter
-        recyclerView!!.setHasFixedSize(true)
+        listAdapter.setOnItemClickListener(this)
+        recyclerView.adapter = listAdapter
+        recyclerView.setHasFixedSize(true)
         val layoutManager = GridLayoutManager(context,
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3)
-        recyclerView!!.layoutManager = layoutManager
+        recyclerView.layoutManager = layoutManager
 
         // Pagination
         gridPagingScrollListener = GridPagingScrollListener(layoutManager)
-        gridPagingScrollListener!!.setLoadMoreItemsListener(this)
-        recyclerView!!.addOnScrollListener(gridPagingScrollListener!!)
+        gridPagingScrollListener.setLoadMoreItemsListener(this)
+        recyclerView.addOnScrollListener(gridPagingScrollListener)
     }
 
     private fun showProgressBar() {
-        viewAnimator!!.displayedChild = viewAnimator!!.indexOfChild(progressBar)
+        viewAnimator.displayedChild = viewAnimator.indexOfChild(progressBar)
     }
 
     private fun showList() {
-        swipeRefresh!!.isRefreshing = false
-        viewAnimator!!.displayedChild = viewAnimator!!.indexOfChild(recyclerView)
+        swipeRefresh.isRefreshing = false
+        viewAnimator.displayedChild = viewAnimator.indexOfChild(recyclerView)
     }
 
     private fun showError() {
-        swipeRefresh!!.isRefreshing = false
-        viewAnimator!!.displayedChild = viewAnimator!!.indexOfChild(errorTextView)
+        swipeRefresh.isRefreshing = false
+        viewAnimator.displayedChild = viewAnimator.indexOfChild(errorText)
     }
 
     private fun handleResult(listAdapter: ListAdapter, searchResult: SearchResult) {
@@ -142,14 +130,14 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                 showError()
             }
         }
-        gridPagingScrollListener!!.markLoading(false)
+        gridPagingScrollListener.markLoading(false)
     }
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
         listAdapter.setItems(searchResult.items)
 
         if (searchResult.totalResult <= listAdapter.itemCount) {
-            gridPagingScrollListener!!.markLastPage(true)
+            gridPagingScrollListener.markLastPage(true)
         }
     }
 
@@ -159,13 +147,13 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     }
 
     override fun loadMoreItems(page: Int) {
-        gridPagingScrollListener!!.markLoading(true)
-        listViewModel.searchMoviesByTitle(currentQuery!!, page, false)
+        gridPagingScrollListener.markLoading(true)
+        listViewModel.searchMoviesByTitle(currentQuery, page, false)
     }
 
     fun submitSearchQuery(query: String) {
         currentQuery = query
-        listAdapter!!.clearItems()
+        listAdapter.clearItems()
         listViewModel.searchMoviesByTitle(query, 1, true)
         showProgressBar()
     }
