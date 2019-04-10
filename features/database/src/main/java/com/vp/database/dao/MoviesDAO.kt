@@ -1,33 +1,57 @@
 package com.vp.database.dao
 
+import android.util.Log
 import com.vp.database.model.realmentity.ListItemRealmEntity
 import com.vp.database.db.RealmManager
 import com.vp.database.extensions.*
 import com.vp.database.model.entity.ListItem
+import io.realm.exceptions.RealmException
 
 
-class MoviesDAO {
+object MoviesDAO {
 
     fun saveFavorite(listItem: ListItem) {
-        RealmManager.executeTransaction { realm ->
-            realm.saveEntity(mapListItemToRealmEntity(listItem))
+        try {
+
+            RealmManager.executeTransaction { realm ->
+                realm.saveEntity(mapListItemToRealmEntity(listItem))
+            }
+        } catch (e: RealmException) {
+            Log.e("MoviesDao", e.toString())
         }
     }
 
     fun removeFavorite(id: String) {
-        RealmManager.executeTransaction { realm ->
-            realm.deleteEntity(ListItemRealmEntity::class.java, id)
+        try {
+            RealmManager.executeTransaction { realm ->
+                realm.deleteEntity(ListItemRealmEntity::class.java, id)
+            }
+        } catch (e: RealmException) {
+            Log.e("MoviesDao", e.toString())
         }
     }
 
-    fun isFavorite(id: String) = RealmManager.executeTransaction { realm ->
-        realm.entityExists(ListItemRealmEntity::class.java, "imdbID", id)
+    fun isFavorite(id: String) :Boolean{
+        try {
+            return RealmManager.executeTransaction { realm ->
+                realm.entityExists(ListItemRealmEntity::class.java, "imdbID", id)
+            }?:false
+        } catch (e: RealmException) {
+            Log.e("MoviesDao", e.toString())
+        }
+        return false
     }
 
-    fun getFavoritesMovies() =
-            getFavoritesRealmEntity {
+    fun getFavoritesMovies(): List<ListItem>? {
+        try {
+            return getFavoritesRealmEntity {
                 return@getFavoritesRealmEntity mapRealmEntityList(it)
             }
+        } catch (e: RealmException) {
+            Log.e("MoviesDao", e.toString())
+        }
+        return emptyList()
+    }
 
 
     private fun getFavoritesRealmEntity(block: (List<ListItemRealmEntity>) -> List<ListItem>?): List<ListItem>? =
@@ -54,10 +78,10 @@ class MoviesDAO {
     }
 
     private fun mapSingleRealmEntityToDomain(listItemRealmEntity: ListItemRealmEntity) = ListItem().apply {
-        imdbID = listItemRealmEntity.imdbID?:""
-        poster = listItemRealmEntity.poster?:""
-        title = listItemRealmEntity.title?:""
-        year = listItemRealmEntity.poster?:""
+        imdbID = listItemRealmEntity.imdbID ?: ""
+        poster = listItemRealmEntity.poster ?: ""
+        title = listItemRealmEntity.title ?: ""
+        year = listItemRealmEntity.poster ?: ""
     }
 
 

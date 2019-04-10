@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vp.database.dao.MoviesDAO
 import com.vp.database.model.entity.ListItem
-import com.vp.detail.DetailActivity
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
 import retrofit2.Call
@@ -18,7 +17,7 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     private val details: MutableLiveData<MovieDetail> = MutableLiveData()
     private val title: MutableLiveData<String> = MutableLiveData()
     private val loadingState: MutableLiveData<LoadingState> = MutableLiveData()
-    private val moviesDAO = MoviesDAO()
+    lateinit var movieId: String
 
     fun title(): LiveData<String> = title
 
@@ -26,9 +25,10 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
 
     fun state(): LiveData<LoadingState> = loadingState
 
-    fun fetchDetails() {
+    fun fetchDetails(movieIdIntent: String) {
+        movieId = movieIdIntent
         loadingState.value = LoadingState.IN_PROGRESS
-        detailService.getMovie(DetailActivity.queryProvider.getMovieId()).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
@@ -46,20 +46,20 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
         })
     }
 
-    fun saveToFavorite(movieId: String) {
-        moviesDAO.saveFavorite(ListItem().apply {
-            imdbID = movieId
-            poster = details.value?.poster ?: ""
-            title = details.value?.title ?: ""
-            year = details.value?.year ?: ""
-        })
-    }
+    fun saveToFavorite() =
+            MoviesDAO.saveFavorite(ListItem().apply {
+                imdbID = movieId
+                poster = details.value?.poster ?: ""
+                title = details.value?.title ?: ""
+                year = details.value?.year ?: ""
+            })
 
-    fun removeFavorite(movieId: String) {
-        moviesDAO.removeFavorite(movieId)
-    }
 
-    fun checkFavorite(movieId: String) = moviesDAO.isFavorite(movieId)
+    fun removeFavorite() =
+            MoviesDAO.removeFavorite(movieId)
+
+
+    fun checkFavorite() : Boolean = MoviesDAO.isFavorite(movieId)
 
     enum class LoadingState {
         IN_PROGRESS, LOADED, ERROR

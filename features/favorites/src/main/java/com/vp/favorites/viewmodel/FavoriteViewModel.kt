@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModel
 class FavoriteViewModel @Inject constructor() : ViewModel() {
     private val liveData = MutableLiveData<DataBaseResult>()
 
-    private val moviesDAO = MoviesDAO()
-
     fun observeMovies(): LiveData<DataBaseResult> {
         return liveData
     }
@@ -22,8 +20,8 @@ class FavoriteViewModel @Inject constructor() : ViewModel() {
 
         liveData.value = DataBaseResult.inProgress()
 
-        val results = moviesDAO.getFavoritesMovies()
-        if (results != null && results.size > 0) {
+        val results = MoviesDAO.getFavoritesMovies()
+        if (results != null && results.isNotEmpty()) {
             liveData.setValue(DataBaseResult.success(results, results.size))
         } else {
             liveData.setValue(DataBaseResult.error())
