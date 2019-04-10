@@ -14,14 +14,14 @@ class MoviesDAO {
         }
     }
 
-    fun removeFavorite(id: String?) {
+    fun removeFavorite(id: String) {
         RealmManager.executeTransaction { realm ->
-            realm.deleteEntity(ListItemRealmEntity::class.java, id?.toInt() ?: 0)
+            realm.deleteEntity(ListItemRealmEntity::class.java, id)
         }
     }
 
-    fun isFavorite(id: String?) = RealmManager.executeTransaction { realm ->
-        realm.entityExists(ListItemRealmEntity::class.java, "imdbID", id?.toInt() ?: 0)
+    fun isFavorite(id: String) = RealmManager.executeTransaction { realm ->
+        realm.entityExists(ListItemRealmEntity::class.java, "imdbID", id)
     }
 
     fun getFavoritesMovies() =

@@ -56,12 +56,12 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
                 handleResult(listAdapter!!, searchResult)
             }
         }
-
-        favoriteViewModel.loadFavorites()
-        showProgressBar()
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        favoriteViewModel.loadFavorites()
+    }
 
     private fun initList() {
         listAdapter = FavoriteAdapter()
@@ -101,8 +101,6 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
 
     private fun setItemsData(listAdapter: FavoriteAdapter, searchResult: DataBaseResult) {
         listAdapter.setItems(searchResult.items)
-
-
     }
 
     override fun onItemClick(imdbID: String) {
@@ -117,6 +115,6 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
     }
 
     companion object {
-        internal val TAG = "FavoriteFragment"
+        internal const val TAG = "FavoriteFragment"
     }
 }

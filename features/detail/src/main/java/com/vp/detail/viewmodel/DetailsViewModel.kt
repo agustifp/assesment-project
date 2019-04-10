@@ -49,11 +49,17 @@ class DetailsViewModel @Inject constructor(private val detailService: DetailServ
     fun saveToFavorite(movieId: String) {
         moviesDAO.saveFavorite(ListItem().apply {
             imdbID = movieId
-            poster = details.value?.poster?:""
-            title = details.value?.title?:""
-            year = details.value?.year?:""
+            poster = details.value?.poster ?: ""
+            title = details.value?.title ?: ""
+            year = details.value?.year ?: ""
         })
     }
+
+    fun removeFavorite(movieId: String) {
+        moviesDAO.removeFavorite(movieId)
+    }
+
+    fun checkFavorite(movieId: String) = moviesDAO.isFavorite(movieId)
 
     enum class LoadingState {
         IN_PROGRESS, LOADED, ERROR

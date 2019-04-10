@@ -12,14 +12,14 @@ fun <T : RealmObject> Realm.saveEntities(entityList: List<T>) {
 fun <T : RealmObject> Realm.saveEntity(entity: T): T =
         copyToRealmOrUpdate(entity)
 
-fun <T : RealmObject> Realm.getEntity(entityType: Class<T>, idField: String, id: Int): T? =
+fun <T : RealmObject> Realm.getEntity(entityType: Class<T>, idField: String, id: String): T? =
         where(entityType).equalTo(idField, id).findFirst()
 
 fun <T : RealmObject, S> Realm.getAllEntities(entityType: Class<T>, block: (List<T>) -> S): S =
         block(where(entityType).findAll().toList())
 
-fun <T : RealmObject> Realm.entityExists(entityType: Class<T>, idField: String, id: Int): Boolean =
+fun <T : RealmObject> Realm.entityExists(entityType: Class<T>, idField: String, id: String): Boolean =
         getEntity(entityType, idField, id) != null
 
-fun <T : RealmObject> Realm.deleteEntity(entityType: Class<T>, id: Int) =
-        where(entityType).equalTo("id", id).findFirst()?.deleteFromRealm()
+fun <T : RealmObject> Realm.deleteEntity(entityType: Class<T>, id: String) =
+        where(entityType).equalTo("imdbID", id).findFirst()?.deleteFromRealm()
