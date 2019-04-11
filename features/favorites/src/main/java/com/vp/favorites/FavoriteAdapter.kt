@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 
 import com.vp.database.model.entity.MovieItem
 import com.vp.list.GlideApp
@@ -21,12 +22,13 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val listItem = listItems[position]
-        if (listItem.poster.isNotEmpty() && NO_IMAGE != listItem.poster) {
+        val movieItem = listItems[position]
+        if (movieItem.poster.isNotEmpty() && NO_IMAGE != movieItem.poster) {
             GlideApp
                     .with(holder.image)
-                    .load(listItem.poster)
+                    .load(movieItem.poster)
                     .into(holder.image)
+            holder.title.text = movieItem.title
         } else {
             holder.image.visibility = View.GONE
         }
@@ -53,10 +55,12 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var image: ImageView
+        var title: TextView
 
         init {
             itemView.setOnClickListener(this)
             image = itemView.findViewById(R.id.poster)
+            title = itemView.findViewById(R.id.title)
         }
 
         override fun onClick(v: View) {
