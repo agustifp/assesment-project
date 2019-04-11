@@ -1,7 +1,6 @@
 package com.vp.favorites.viewmodel
 
 import com.vp.database.dao.MoviesDAO
-import com.vp.database.model.entity.ListItem
 
 import javax.inject.Inject
 

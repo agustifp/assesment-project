@@ -3,12 +3,12 @@ package com.vp.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vp.database.model.entity.ListItem
+import com.vp.database.model.entity.MovieItem
 import com.vp.list.holder.ListItemViewHolder
 
 class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var listItems = arrayListOf<ListItem>()
+    private var listItems = arrayListOf<MovieItem>()
     private lateinit var EMPTY_ON_ITEM_CLICK_LISTENER: OnItemClickListener
     private lateinit var onItemClickListener: OnItemClickListener
 
@@ -27,8 +27,8 @@ class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return listItems.size
     }
 
-    fun setItems(listItems: List<ListItem>) {
-        this.listItems = listItems as ArrayList<ListItem>
+    fun setItems(movieItems: List<MovieItem>) {
+        this.listItems = movieItems as ArrayList<MovieItem>
         notifyDataSetChanged()
     }
 

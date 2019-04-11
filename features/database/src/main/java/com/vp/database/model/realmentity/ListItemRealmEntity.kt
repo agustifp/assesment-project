@@ -10,4 +10,7 @@ open class ListItemRealmEntity : RealmObject() {
     var title: String? = null
     var year: String? = null
     var poster: String? = null
+    var runtime: String? = null
+    var director: String? = null
+    var plot: String? = null
 }

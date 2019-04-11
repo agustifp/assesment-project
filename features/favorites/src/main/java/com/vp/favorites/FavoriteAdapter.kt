@@ -4,16 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 
-import com.vp.database.model.entity.ListItem
+import com.vp.database.model.entity.MovieItem
 import com.vp.list.GlideApp
 
-import java.util.Collections
 import androidx.recyclerview.widget.RecyclerView
 
 class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
-    private var listItems = listOf<ListItem>()
+    private var listItems = listOf<MovieItem>()
 
     private lateinit var EMPTY_ON_ITEM_CLICK_LISTENER: OnItemClickListener
     private lateinit var onItemClickListener: OnItemClickListener
@@ -30,16 +28,17 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
                     .load(listItem.poster)
                     .into(holder.image)
         } else {
-            holder.image.setImageResource(R.drawable.placeholder)
+            holder.image.visibility = View.GONE
         }
+
     }
 
     override fun getItemCount(): Int {
         return listItems.size
     }
 
-    fun setItems(listItems: List<ListItem>) {
-        this.listItems = listItems
+    fun setItems(movieItems: List<MovieItem>) {
+        this.listItems = movieItems
         notifyDataSetChanged()
     }
 

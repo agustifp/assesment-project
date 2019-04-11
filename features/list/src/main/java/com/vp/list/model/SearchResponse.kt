@@ -1,14 +1,12 @@
 package com.vp.list.model
 
 import com.google.gson.annotations.SerializedName
-import com.vp.database.model.entity.ListItem
-
-import java.util.Collections.emptyList
+import com.vp.database.model.entity.MovieItem
 
 class SearchResponse constructor(@field:SerializedName("Response")
                                          private val response: String) {
     @SerializedName("Search")
-    val search: List<ListItem> = listOf()
+    val searches: List<MovieItem> = listOf()
 
     val totalResults: Int = 0
 

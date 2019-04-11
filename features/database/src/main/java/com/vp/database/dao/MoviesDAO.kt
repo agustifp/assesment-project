@@ -4,17 +4,17 @@ import android.util.Log
 import com.vp.database.model.realmentity.ListItemRealmEntity
 import com.vp.database.db.RealmManager
 import com.vp.database.extensions.*
-import com.vp.database.model.entity.ListItem
+import com.vp.database.model.entity.MovieItem
 import io.realm.exceptions.RealmException
 
 
 object MoviesDAO {
 
-    fun saveFavorite(listItem: ListItem) {
+    fun saveFavorite(movieItem: MovieItem) {
         try {
 
             RealmManager.executeTransaction { realm ->
-                realm.saveEntity(mapListItemToRealmEntity(listItem))
+                realm.saveEntity(mapListItemToRealmEntity(movieItem))
             }
         } catch (e: RealmException) {
             Log.e("MoviesDao", e.toString())
@@ -42,7 +42,7 @@ object MoviesDAO {
         return false
     }
 
-    fun getFavoritesMovies(): List<ListItem>? {
+    fun getFavoritesMovies(): List<MovieItem>? {
         try {
             return getFavoritesRealmEntity {
                 return@getFavoritesRealmEntity mapRealmEntityList(it)
@@ -54,7 +54,7 @@ object MoviesDAO {
     }
 
 
-    private fun getFavoritesRealmEntity(block: (List<ListItemRealmEntity>) -> List<ListItem>?): List<ListItem>? =
+    private fun getFavoritesRealmEntity(block: (List<ListItemRealmEntity>) -> List<MovieItem>?): List<MovieItem>? =
             RealmManager.executeTransaction { realm ->
                 realm.getAllEntities(ListItemRealmEntity::class.java) {
                     block(it)
@@ -62,26 +62,32 @@ object MoviesDAO {
             }
 
 
-    private fun mapListItemToRealmEntity(listItem: ListItem) = ListItemRealmEntity().apply {
-        imdbID = listItem.imdbID
-        poster = listItem.poster
-        title = listItem.title
-        year = listItem.poster
+    private fun mapListItemToRealmEntity(movieItem: MovieItem) = ListItemRealmEntity().apply {
+        imdbID = movieItem.imdbID
+        poster = movieItem.poster
+        title = movieItem.title
+        year = movieItem.poster
+        plot = movieItem.plot
+        runtime = movieItem.runtime
+        director = movieItem.director
     }
 
-    private fun mapRealmEntityList(realmList: List<ListItemRealmEntity>): List<ListItem> {
-        val domainList = arrayListOf<ListItem>()
+    private fun mapRealmEntityList(realmList: List<ListItemRealmEntity>): List<MovieItem> {
+        val domainList = arrayListOf<MovieItem>()
         realmList.forEach {
             domainList.add(mapSingleRealmEntityToDomain(it))
         }
         return domainList.toList()
     }
 
-    private fun mapSingleRealmEntityToDomain(listItemRealmEntity: ListItemRealmEntity) = ListItem().apply {
+    private fun mapSingleRealmEntityToDomain(listItemRealmEntity: ListItemRealmEntity) = MovieItem().apply {
         imdbID = listItemRealmEntity.imdbID ?: ""
         poster = listItemRealmEntity.poster ?: ""
         title = listItemRealmEntity.title ?: ""
         year = listItemRealmEntity.poster ?: ""
+        plot = listItemRealmEntity.plot ?: ""
+        runtime = listItemRealmEntity.runtime ?: ""
+        director = listItemRealmEntity.director ?: ""
     }
 
 

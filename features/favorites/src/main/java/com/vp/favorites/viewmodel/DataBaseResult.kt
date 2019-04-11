@@ -1,10 +1,10 @@
 package com.vp.favorites.viewmodel
 
-import com.vp.database.model.entity.ListItem
+import com.vp.database.model.entity.MovieItem
 
 import java.util.Objects
 
-class DataBaseResult constructor(val items: List<ListItem>, private val totalResult: Int, val listState: FavoriteState) {
+class DataBaseResult constructor(val items: List<MovieItem>, private val totalResult: Int, val listState: FavoriteState) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -25,7 +25,7 @@ class DataBaseResult constructor(val items: List<ListItem>, private val totalRes
             return DataBaseResult(emptyList(), 0, FavoriteState.ERROR)
         }
 
-        fun success(items: List<ListItem>, totalResult: Int): DataBaseResult {
+        fun success(items: List<MovieItem>, totalResult: Int): DataBaseResult {
             return DataBaseResult(items, totalResult, FavoriteState.LOADED)
         }
 

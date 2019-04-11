@@ -3,18 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="200dp"
     android:layout_height="300dp"
+    android:layout_margin="5dp"
     android:clickable="true"
     android:elevation="8dp"
     android:focusable="true"
-    android:layout_margin="5dp"
     android:foreground="?selectableItemBackground"
     app:cardCornerRadius="8dp">
 
-    <ImageView
-        android:id="@+id/poster"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
+        android:background="@android:color/darker_gray">
+
+        <ImageView
+            android:src="@drawable/ic_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+
+
+
 </androidx.cardview.widget.CardView>

@@ -3,7 +3,7 @@ package com.vp.list.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vp.database.model.entity.ListItem
+import com.vp.database.model.entity.MovieItem
 
 import com.vp.list.model.SearchResponse
 import com.vp.list.model.SearchResult
@@ -19,7 +19,7 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
     private val liveData = MutableLiveData<SearchResult>()
 
     private var currentTitle = ""
-    private val aggregatedItems = arrayListOf<ListItem>()
+    private val aggregatedItems = arrayListOf<MovieItem>()
 
     fun observeMovies(): LiveData<SearchResult> {
         return liveData
@@ -39,7 +39,7 @@ class ListViewModel @Inject constructor(private val searchService: SearchService
                 val result = response.body()
 
                 if (result != null && result.hasResponse()) {
-                    aggregatedItems.addAll(result.search)
+                    aggregatedItems.addAll(result.searches)
                     liveData.value = SearchResult.success(aggregatedItems, result.totalResults)
                 }else if(hasToReload){
                     liveData.value = SearchResult.success(aggregatedItems, 0)

@@ -3,9 +3,7 @@
 
     <item>
         <shape>
-            <stroke
-                android:width="4dp"
-                android:color="@android:color/white" />
+
             <solid android:color="@color/placeholder_gray_background" />
             <size
                 android:width="200dp"
