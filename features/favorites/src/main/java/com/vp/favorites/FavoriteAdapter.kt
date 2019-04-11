@@ -13,7 +13,7 @@ import java.util.Collections
 import androidx.recyclerview.widget.RecyclerView
 
 class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
-    private var listItems = arrayListOf<ListItem>()
+    private var listItems = listOf<ListItem>()
 
     private lateinit var EMPTY_ON_ITEM_CLICK_LISTENER: OnItemClickListener
     private lateinit var onItemClickListener: OnItemClickListener
@@ -39,13 +39,10 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.ListViewHolder>() {
     }
 
     fun setItems(listItems: List<ListItem>) {
-        this.listItems = listItems as ArrayList<ListItem>
+        this.listItems = listItems
         notifyDataSetChanged()
     }
 
-    fun clearItems() {
-        listItems.clear()
-    }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {
         if (onItemClickListener != null) {
