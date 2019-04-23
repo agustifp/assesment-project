@@ -50,9 +50,7 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
 
         observe(favoriteViewModel.observeMovies()) {
             searchResult ->
-            if (searchResult != null) {
-                handleResult(listAdapter!!, searchResult)
-            }
+            searchResult?.let { handleResult(listAdapter!!, it) }
         }
     }
 
