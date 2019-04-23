@@ -3,7 +3,7 @@ package com.vp.list.model
 import com.google.gson.annotations.SerializedName
 import com.vp.database.model.entity.MovieItem
 
-class SearchResponse constructor(@field:SerializedName("Response")
+open class SearchResponse constructor(@field:SerializedName("Response")
                                          private val response: String) {
     @SerializedName("Search")
     val searches: List<MovieItem> = listOf()

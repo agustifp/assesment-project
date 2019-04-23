@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vp.database.model.entity.MovieItem
-
 import com.vp.list.model.SearchResponse
 import com.vp.list.model.SearchResult
+
 import com.vp.list.service.SearchService
 
 import javax.inject.Inject

@@ -14,17 +14,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.google.android.material.snackbar.Snackbar
 
 import com.vp.detail.DetailActivity
+import com.vp.list.model.ErrorResult
+import com.vp.list.model.InProgressResult
+import com.vp.list.model.LoadedResult
 import com.vp.list.model.SearchResult
 import com.vp.list.viewmodel.ListViewModel
 
 import javax.inject.Inject
 
-import com.vp.list.viewmodel.ListState
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
 
@@ -142,8 +143,8 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
     }
 
     private fun handleResult(listAdapter: ListAdapter, searchResult: SearchResult) {
-        when (searchResult.listState) {
-            ListState.LOADED -> {
+        when (searchResult) {
+            is LoadedResult -> {
                 if (searchResult.totalResult > 0) {
                     setItemsData(listAdapter, searchResult)
                     showList()
@@ -151,23 +152,21 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener,
                     showEmptyState()
                 }
             }
-            ListState.IN_PROGRESS -> {
+            is InProgressResult -> {
                 if (gridPagingScrollListener.isFirstLoad()) {
                     showProgressBar()
                 } else {
                     showProgressBarMoreContent()
                 }
             }
-            else -> {
-                showError()
-            }
+            is ErrorResult -> showError()
         }
         gridPagingScrollListener.isLoading = false
     }
 
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
-        listAdapter.setItems(searchResult.items)
+        listAdapter.setItems((searchResult as LoadedResult).items)
 
         if (searchResult.totalResult <= listAdapter.itemCount) {
             gridPagingScrollListener.isLastPage = true

@@ -7,23 +7,24 @@ import javax.inject.Inject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.data.model.SearchResult
 
 class FavoriteViewModel @Inject constructor() : ViewModel() {
-    private val liveData = MutableLiveData<DataBaseResult>()
+    private val liveData = MutableLiveData<com.example.data.model.SearchResult>()
 
-    fun observeMovies(): LiveData<DataBaseResult> {
+    fun observeMovies(): LiveData<com.example.data.model.SearchResult> {
         return liveData
     }
 
     fun loadFavorites() {
 
-        liveData.value = DataBaseResult.inProgress()
+        liveData.value = com.example.data.model.SearchResult.inProgress()
 
         val results = MoviesDAO.getFavoritesMovies()
         if (results != null && results.isNotEmpty()) {
-            liveData.setValue(DataBaseResult.success(results, results.size))
+            liveData.setValue(com.example.data.model.SearchResult.success(results, results.size))
         } else {
-            liveData.setValue(DataBaseResult.error())
+            liveData.setValue(com.example.data.model.SearchResult.error())
         }
     }
 }

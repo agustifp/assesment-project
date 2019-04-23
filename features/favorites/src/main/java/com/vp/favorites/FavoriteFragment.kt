@@ -7,12 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.ViewAnimator
 
 import com.vp.detail.DetailActivity
-import com.vp.favorites.viewmodel.DataBaseResult
 import com.vp.favorites.viewmodel.FavoriteViewModel
 
 import javax.inject.Inject
@@ -20,8 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.vp.favorites.viewmodel.FavoriteState
+import com.example.data.model.ErrorResult
+import com.example.data.model.InProgressResult
+import com.example.data.model.LoadedResult
+import com.example.data.model.SearchResult
 import com.vp.list.observe
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_favorite.*
@@ -84,23 +82,19 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
         viewAnimator!!.displayedChild = viewAnimator!!.indexOfChild(errorText)
     }
 
-    private fun handleResult(listAdapter: FavoriteAdapter, searchResult: DataBaseResult) {
-        when (searchResult.listState) {
-            FavoriteState.LOADED -> {
+    private fun handleResult(listAdapter: FavoriteAdapter, searchResult: com.example.data.model.SearchResult) {
+        when (searchResult) {
+            is com.example.data.model.LoadedResult -> {
                 setItemsData(listAdapter, searchResult)
                 showList()
             }
-            FavoriteState.IN_PROGRESS -> {
-                showProgressBar()
-            }
-            else -> {
-                showError()
-            }
+            is com.example.data.model.InProgressResult -> showProgressBar()
+            is com.example.data.model.ErrorResult -> showError()
         }
     }
 
-    private fun setItemsData(listAdapter: FavoriteAdapter, searchResult: DataBaseResult) {
-        listAdapter.setItems(searchResult.items)
+    private fun setItemsData(listAdapter: FavoriteAdapter, searchResult: com.example.data.model.SearchResult) {
+        listAdapter.setItems((searchResult as com.example.data.model.LoadedResult).items)
     }
 
     override fun onItemClick(imdbID: String) {
